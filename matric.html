@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Действия над матрицами</title>
+	<link rel="stylesheet" type="text/css" href="matric.css">
+
+	<script src="jquery-3.2.1.min.js"></script>
+	
+
+</head>
+<body>
+	<h1>Действия над матрицами</h1>
+
+	<button name="random">Сгенерировать матрицы</button> <br/>
+
+	Первая матрица
+	<table name	="first_table">
+		<tr>
+			<td id="0"></td>
+			<td id="1"></td>
+			<td id="2"></td>
+		</tr>
+		<tr>
+			<td id="3"></td>
+			<td id="4"></td>
+			<td id="5"></td>
+		</tr>
+		<tr>
+			<td id="6"></td>
+			<td id="7"></td>
+			<td id="8"></td>
+		</tr>
+	</table>
+
+	Вторая матрица
+	<table name	="second_table">
+		<tr>
+			<td id="0"></td>
+			<td id="1"></td>
+			<td id="2"></td>
+		</tr>
+		<tr>
+			<td id="3"></td>
+			<td id="4"></td>
+			<td id="5"></td>
+		</tr>
+		<tr>
+			<td id="6"></td>
+			<td id="7"></td>
+			<td id="8"></td>
+		</tr>
+	</table>
+
+	<button name="sum">Сложить матрицы</button>
+	<button name="dif">Вычесть матрицы</button>
+	<button name="mul">Умножить матрицы</button> <br/>
+
+	Итоговая матрица
+	<table name	="final_table">
+		<tr>
+			<td id="0"></td>
+			<td id="1"></td>
+			<td id="2"></td>
+		</tr>
+		<tr>
+			<td id="3"></td>
+			<td id="4"></td>
+			<td id="5"></td>
+		</tr>
+		<tr>
+			<td id="6"></td>
+			<td id="7"></td>
+			<td id="8"></td>
+		</tr>
+	</table>
+
+</body>
+
+<script type="text/javascript">
+	
+
+
+	function generate_table(table_name) {
+		var table = [];
+		for (var i = 0; i < 9; i++){
+			table[i] = Math.floor(Math.random() * (100 - (-100) +1)) + (-100);
+			draw_table(table_name, i, table[i]);
+		}
+		return table;
+	}
+
+	function draw_table(table_name, id, num) {
+		$("table[name="+table_name).find("#"+id).html(num);
+	}
+
+	function sum(first_table, second_table) {
+		var sum_table = [];
+		for (var i = 0; i < 9; i++) {
+			sum_table[i] = first_table[i] + second_table[i];
+			draw_table("final_table", i, sum_table[i]);
+		}
+		return sum_table
+	}
+
+	function clean_table(table_name) {
+		for (var i = 0; i < 9; i++) {
+			$("table[name="+table_name).find("#"+i).html("").attr("bgcolor", "");
+		}
+		// $("table[name="+table_name).attr("border", "0");
+	}
+
+	function find_max(table) {
+		var max = table[0];
+		var max_i = 0;
+		for (var i = 1; i < 9; i++) {
+			if (table[i] > max) {
+				max = table[i];
+				max_i = i;
+			}			
+		}
+		$("table[name='final_table'").find("#"+max_i).attr("bgcolor","#0ff");
+		// return max_i;
+
+	}
+
+	function find_min(table) {
+		var min = table[0];
+		var min_i = 0;
+		for (var i = 1; i < 9; i++) {
+			if (table[i] < min) {
+				min = table[i];
+				min_i = i;
+			}
+		}
+		$("table[name='final_table'").find("#"+min_i).attr("bgcolor","#f2f");
+		// return min_i;
+	}
+
+
+	$(document).ready(function() {
+
+		var first_table = [];
+		var second_table = [];
+
+		$("button[name='random'").on('click', function() {
+
+			first_table = generate_table("first_table");
+			second_table = generate_table("second_table");
+			clean_table("final_table");			;
+			// $("button[name='sum'").attr('cli')
+		})
+
+
+		$("button[name='sum']").on('click', function() {
+			if (first_table.length == 0 || second_table.length == 0) {
+				alert("Сгенерируйте сначала матрицы!")
+			} else {
+				clean_table("final_table");
+				var sum_table = [];
+				for (var i = 0; i < 9; i++) {
+					sum_table[i] = first_table[i] + second_table[i];
+					draw_table("final_table", i, sum_table[i]);
+				}
+				find_min(sum_table);
+				find_max(sum_table);
+			}
+		})
+
+		$("button[name='dif']").on('click', function() {
+			if (first_table.length == 0 || second_table.length == 0) {
+				alert("Сгенерируйте сначала матрицы!")
+			} else {
+				clean_table("final_table");
+				var dif_table = [];
+				for (var i = 0; i < 9; i++) {
+					dif_table[i] = first_table[i] - second_table[i];
+					draw_table("final_table", i, dif_table[i]);
+				}
+				find_min(dif_table);
+				find_max(dif_table);
+			}			
+		})
+
+		$("button[name='mul']").on('click', function() {
+			if (first_table.length == 0 || second_table.length == 0) {
+				alert("Сгенерируйте сначала матрицы!")
+			} else {
+				var mul_table = [];
+				var i =0
+				clean_table("final_table");
+
+				for (var fi = 0; fi < 3; fi++){ 
+					for (var si = 0; si < 3; si++) { 
+						sum = 0;
+						for (var a = 0; a < 3; a ++){ 						
+							sum += first_table[a + 3 * fi] * second_table[a * 3 + si];
+						}
+						mul_table[i] = sum;
+						draw_table("final_table", i, mul_table[i]);					
+						i++;
+					}
+				}		
+				find_min(mul_table);
+				find_max(mul_table);
+			}			
+		})
+
+	})
+
+
+
+	// 012
+	// 345
+	// 678
+
+	// 012
+	// 345
+	// 678
+
+	// 0 = 00 + 13 + 26	1 = 01 + 14 + 27	2 = 02 + 15 + 28
+	// 3 = 30 + 43 + 56	4 = 31 + 44 + 57	5 = 32 + 45 + 58
+	// 6 = 60 + 73 + 86	7 = 61 + 74 + 87	8 = 62 + 75 + 88
+
+	// А=0..2
+
+	// А+3*0 * (А*3)		А+3*0 * (А*3+1)		А+3*0 * (А*3+2)
+	// А+3*1 * (А*3)		А+3*1 * (А*3+1)		А+3*1 * (А*3+2)
+	// А+3*2 * (А*3)		А+3*2 * (А*3+1)		А+3*2 * (А*3+2)
+
+	// for (i=1..8) {
+	// 	sum=0;
+	// 	for (i1=0..2){
+	// 		for (i2=0..2) {
+	// 			for (a=0..2){
+	// 				sum += 1[a+3*i1] * 2[a*3+i2]
+	// 			}
+	// 		}
+	// 	}
+	// 	3[i] = sum;
+	// }
+	
+
+
+
+
+</script>
+</html>
